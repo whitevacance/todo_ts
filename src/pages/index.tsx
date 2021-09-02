@@ -1,28 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import theme from 'contexts/theme';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import axios from 'axios';
 
-const DB = [
-  {
-    id: 1,
-    text: 'Hello',
-    done: false,
-  },
-  {
-    id: 2,
-    text: '2222222',
-    done: false,
-  },
-];
-
-const idsInDb = DB.map(({ id }) => id);
-let maxId = Math.max(...idsInDb);
+axios.defaults.baseURL = 'http://localhost:7007';
 
 function Todo(): JSX.Element {
   const [text, setText] = useState('');
-  const [todos, setTodos] = useState(DB);
+  const [todos, setTodos] = useState([]);
+
+  let maxId;
+
+  useEffect(async () => {
+    try {
+      const { data } = await axios.get('/posts');
+      await Promise.resolve(data);
+      setTodos(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const idsInDb = todos.map(({ id }) => id);
+  maxId = Math.max(...idsInDb);
 
   const handleChangeText = (e) => setText(e.target.value);
 
