@@ -1,0 +1,26 @@
+@charset "utf-8";
+
+/* ******************************************************
+	- Title : Cascading Style Sheets
+	- Date : 2021-08-24
+	- Description : 기획전 랜딩 글로벌 css
+*********************************************************/
+
+html,
+body {
+  background: none;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+* {
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: none;
+}
+
+body {
+  touch-action: manipulation;
+  scroll-behavior: smooth;
+}

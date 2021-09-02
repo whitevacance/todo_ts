@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "api/*": ["./src/apis/*"],
+      "components/*": ["./src/components/*"],
+      "containers/*": ["./src/containers/*"],
+      "pages/*": ["./src/pages/*"],
+      "libs/*": ["./src/libs/*"],
+      "mocks/*": ["./src/mocks/*"],
+      "constants/*": ["./src/constants/*"],
+      "css/*": ["./src/css/*"],
+      "contexts/*": ["./src/contexts/*"]
+    }
+  },
+  "exclude": ["**/node_modules/*"]
+}
