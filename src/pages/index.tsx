@@ -8,6 +8,7 @@ const Home = (): JSX.Element => {
         TODO LIST
       </h1>
       <div>asfasdf</div>
+      <ul></ul>
     </div>
   );
 };
