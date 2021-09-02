@@ -6,12 +6,16 @@ import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:7007';
+let maxId;
+
+const getMaxId = (items) => {
+  const idsInDb = items.map(({ id }) => id);
+  maxId = Math.max(...idsInDb);
+};
 
 function Todo(): JSX.Element {
   const [text, setText] = useState('');
   const [todos, setTodos] = useState([]);
-
-  let maxId;
 
   useEffect(async () => {
     try {
@@ -23,41 +27,58 @@ function Todo(): JSX.Element {
     }
   }, []);
 
-  const idsInDb = todos.map(({ id }) => id);
-  maxId = Math.max(...idsInDb);
+  // const idsInDb = todos.map(({ id }) => id);
+  // maxId = Math.max(...idsInDb);
+  // getMaxId(todos);
 
   const handleChangeText = (e) => setText(e.target.value);
 
-  const handleClickAddBtn = () => {
+  const handleClickAddBtn = async () => {
     if (text && text.length > 0) {
-      setTodos([
-        ...todos,
-        {
+      try {
+        getMaxId(todos);
+        await axios.post('/posts', {
           id: (maxId += 1),
           text,
           done: false,
-        },
-      ]);
-      setText('');
+        });
+        const { data } = await axios.get('/posts');
+        await Promise.resolve(data);
+        setTodos(data);
+        setText('');
+      } catch (e) {
+        console.error(e);
+      }
     } else {
       alert('할일을 입력해 주세요.');
     }
   };
 
-  const handleCheckDone = (id) => {
-    setTodos(
-      todos.map((item) => {
-        return {
-          id: item.id,
-          text: item.text,
-          done: item.id === id ? !item.done : item.done,
-        };
-      })
-    );
+  const handleCheckDone = async (id) => {
+    try {
+      const isChecked = (await axios.get(`/posts/${id}`)).data.done;
+      await axios.patch(`/posts/${id}`, {
+        done: !isChecked,
+      });
+      const { data } = await axios.get('/posts');
+      await Promise.resolve(data);
+      setTodos(data);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleDelete = (id) => {
-    setTodos(todos.filter((item) => item.id !== id));
+  const handleDelete = async (id) => {
+    if (todos) {
+      try {
+        await axios.delete(`/posts/${id}`);
+        const { data } = await axios.get('/posts');
+        await Promise.resolve(data);
+        setTodos(data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
   };
 
   return (
