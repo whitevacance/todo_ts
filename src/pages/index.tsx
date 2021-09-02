@@ -27,10 +27,6 @@ function Todo(): JSX.Element {
     }
   }, []);
 
-  // const idsInDb = todos.map(({ id }) => id);
-  // maxId = Math.max(...idsInDb);
-  // getMaxId(todos);
-
   const handleChangeText = (e) => setText(e.target.value);
 
   const handleClickAddBtn = async () => {
